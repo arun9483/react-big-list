@@ -13,10 +13,6 @@ interface PersonProps {
   };
 }
 
-const getCountryFlag = (countryCode: string) => {
-  return `https://www.countryflags.io/${countryCode}/flat/16.png`;
-};
-
 export const Person: React.FC<PersonProps> = ({ person }) => {
   const { title, firstName, lastName, email, countryCode } = person;
   const profileInitial = firstName.charAt(0).toUpperCase();
