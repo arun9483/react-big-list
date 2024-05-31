@@ -1,35 +1,56 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import { People, PersonType } from './people';
+
+const url = 'http://localhost:3000/people';
+
+function PeopleRoot() {
+  const [people, setPeople] = useState<PersonType[]>([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    async function fetchPeople() {
+      try {
+        const resp = await fetch(url, {
+          signal: abortController.signal,
+        });
+        const result: PersonType[] = (await resp.json()) as PersonType[];
+        setPeople(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.name === 'AbortError') {
+            // Aborting a fetch throws an error
+            // So we can't update state afterwards
+            console.log('Fetch aborted');
+          } else {
+            // Handle other errors
+            console.error('Fetch failed:', error.message);
+          }
+        } else {
+          // Handle case where error is not an instance of Error
+          console.error('An unknown error occurred');
+        }
+      }
+    }
+    void fetchPeople();
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+  return <People people={people} />;
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <PeopleRoot />,
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
