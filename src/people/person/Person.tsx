@@ -2,15 +2,10 @@ import React from 'react';
 import Flag from 'react-world-flags';
 import styles from './Person.module.css';
 
+import { Person as PersonType } from './../../api-client';
+
 interface PersonProps {
-  person: {
-    id: string;
-    title: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    countryCode: string;
-  };
+  person: PersonType;
 }
 
 export const Person: React.FC<PersonProps> = ({ person }) => {

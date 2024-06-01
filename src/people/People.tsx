@@ -1,15 +1,8 @@
 import React from 'react';
+import { Person as PersonType } from './../api-client';
+
 import { Person } from './person';
 import styles from './People.module.css';
-
-export interface PersonType {
-  id: string;
-  title: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  countryCode: string;
-}
 
 interface PeopleProps {
   people: PersonType[];

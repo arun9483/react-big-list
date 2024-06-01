@@ -1,0 +1,11 @@
+.openapi-generator-ignore
+apis/DefaultApi.ts
+apis/index.ts
+index.ts
+models/GetPerson404Response.ts
+models/ModelError.ts
+models/Person.ts
+models/PickPersonExcludeKeyofPersonId.ts
+models/Title.ts
+models/index.ts
+runtime.ts

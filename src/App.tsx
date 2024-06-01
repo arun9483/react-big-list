@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { People, PersonType } from './people';
-
-const url = 'http://localhost:3000/people';
+import { apiClient, Person } from './api-client';
+import { People } from './people';
 
 function PeopleRoot() {
-  const [people, setPeople] = useState<PersonType[]>([]);
+  const [people, setPeople] = useState<Person[]>([]);
 
   useEffect(() => {
     const abortController = new AbortController();
     async function fetchPeople() {
       try {
-        const resp = await fetch(url, {
+        const result = await apiClient.getPeople({
           signal: abortController.signal,
         });
-        const result: PersonType[] = (await resp.json()) as PersonType[];
         setPeople(result);
       } catch (error) {
         if (error instanceof Error) {
