@@ -1,5 +1,5 @@
 import React from 'react';
-import Flag from 'react-world-flags';
+import ReactCountryFlag from 'react-country-flag';
 import styles from './Person.module.css';
 
 import { Person as PersonType } from './../../api-client';
@@ -20,9 +20,9 @@ export const Person: React.FC<PersonProps> = ({ person }) => {
           <h3 className={styles.title}>
             {title} {firstName} {lastName}
           </h3>
-          <Flag
+          <ReactCountryFlag
             className={styles.country}
-            code={countryCode}
+            countryCode={countryCode}
             alt={countryCode}
           />
         </div>
