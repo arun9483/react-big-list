@@ -41,3 +41,10 @@ render a big list (more than 100,000 records) using reactjs
     - Total Blocking Time: 170ms
     - Cumulative Layout Shift 0
     - Speed Index 2.7s
+
+## Cache API responses at client-end (browser)
+
+- use [react-query](https://www.npmjs.com/package/@tanstack/react-query)
+- don't forget to configure default gcTime (oldName is cacheTime) and staleTime in queryClient.
+- create a custom hook to fetch data using useQuery
+- example: useQueryGetPeople is a custom hook to fetch people using useQuery.
