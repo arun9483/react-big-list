@@ -1,9 +1,13 @@
 /* People.module.css */
-.list {
+.listContainer {
+  height: 95vh; /* 80% of viewport height */
+}
+
+.rowContent {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 16px;
-  width: 100%;
+  height: 100%;
   box-sizing: border-box;
+  padding: 0 20px;
 }

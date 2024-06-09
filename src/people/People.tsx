@@ -1,19 +1,51 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { FixedSizeList as List } from 'react-window';
+
 import { Person as PersonType } from './../api-client';
 
 import { Person } from './person';
-import styles from './People.module.css';
+import peopleStyle from './People.module.css';
 
 interface PeopleProps {
   people: PersonType[];
 }
 
-export const People: React.FC<PeopleProps> = ({ people }) => {
+// Create the row component
+const Row: React.FC<{
+  index: number;
+  data: PersonType[];
+  style: React.CSSProperties;
+}> = ({ index, data, style }) => {
+  const person = data[index];
   return (
-    <div className={styles.list}>
-      {people.map((person) => (
-        <Person key={person.id} person={person} />
-      ))}
+    <div style={style} className={peopleStyle.rowContent}>
+      <Person person={person} />
+    </div>
+  );
+};
+
+export const People: React.FC<PeopleProps> = ({ people }) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [listHeight, setListHeight] = useState<number>(0);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      setListHeight(containerRef.current.clientHeight);
+    }
+  }, [containerRef]);
+
+  return (
+    <div ref={containerRef} className={peopleStyle.listContainer}>
+      {listHeight > 0 && (
+        <List
+          itemData={people} // array of Persons
+          height={listHeight} // Height of the list
+          itemCount={people.length} // Number of items in the list
+          itemSize={80} // Height of each row item
+        >
+          {Row}
+        </List>
+      )}
     </div>
   );
 };
