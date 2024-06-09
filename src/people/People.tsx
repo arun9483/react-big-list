@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FixedSizeList as List } from 'react-window';
 
-import { Person as PersonType } from './../api-client';
-
+import { apiClient, Person as PersonType } from './../api-client';
 import { Person } from './person';
 import peopleStyle from './People.module.css';
 
@@ -24,7 +23,7 @@ const Row: React.FC<{
   );
 };
 
-export const People: React.FC<PeopleProps> = ({ people }) => {
+const PeopleList: React.FC<PeopleProps> = ({ people }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [listHeight, setListHeight] = useState<number>(0);
 
@@ -49,3 +48,39 @@ export const People: React.FC<PeopleProps> = ({ people }) => {
     </div>
   );
 };
+
+export function People() {
+  const [people, setPeople] = useState<PersonType[]>([]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    async function fetchPeople() {
+      try {
+        const result = await apiClient.getPeople({
+          signal: abortController.signal,
+        });
+        setPeople(result);
+      } catch (error) {
+        if (error instanceof Error) {
+          if (error.name === 'AbortError') {
+            // Aborting a fetch throws an error
+            // So we can't update state afterwards
+            console.log('Fetch aborted');
+          } else {
+            // Handle other errors
+            console.error('Fetch failed:', error.message);
+          }
+        } else {
+          // Handle case where error is not an instance of Error
+          console.error('An unknown error occurred');
+        }
+      }
+    }
+    void fetchPeople();
+
+    return () => {
+      abortController.abort();
+    };
+  }, []);
+  return <PeopleList people={people} />;
+}
